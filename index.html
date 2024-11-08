@@ -42,10 +42,11 @@
     </div>
 
     <script>
-        let previousAge = null;
-
         const ageForm = document.getElementById('ageForm');
         const message = document.getElementById('message');
+
+        // Lấy thông tin tuổi đã lưu trong localStorage (nếu có)
+        let storedAges = JSON.parse(localStorage.getItem('ages')) || [];
 
         ageForm.addEventListener('submit', function(event) {
             event.preventDefault(); 
@@ -53,17 +54,17 @@
             const ageInput = document.getElementById('age');
             const age = ageInput.value.trim();
 
-            if (previousAge === null) {
-                message.textContent = `Số tuổi của bạn là ${age}.`;
-                message.style.color = 'green';
-                previousAge = age; 
-            } else if (age === previousAge) {
+            // Kiểm tra nếu số tuổi đã tồn tại trong localStorage
+            if (storedAges.includes(age)) {
                 message.textContent = 'Đã có người có số tuổi này, vui lòng nhập số tuổi khác.';
                 message.style.color = 'red';
             } else {
                 message.textContent = `Số tuổi của bạn là ${age}.`;
                 message.style.color = 'green';
-                previousAge = age; 
+
+                // Lưu số tuổi mới vào localStorage
+                storedAges.push(age);
+                localStorage.setItem('ages', JSON.stringify(storedAges));
             }
 
             ageInput.value = '';
